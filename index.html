@@ -8,6 +8,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="css/leaflet.css">
         <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/L.Control.Locate.min.css">
         <link rel="stylesheet" href="css/qgis2web.css">
         <link rel="stylesheet" href="css/fontawesome-all.min.css">
         <link rel="stylesheet" href="css/leaflet.photon.css">
@@ -27,6 +28,7 @@
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/L.Control.Locate.min.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/leaflet.pattern.js"></script>
         <script src="js/leaflet-hash.js"></script>
@@ -38,13 +40,29 @@
         <script src="data/CaltransRightofWay_2.js"></script>
         <script src="data/GeohydrologicHydrologicWatershed_3.js"></script>
         <script src="data/GeohydrologicGroundBasin_4.js"></script>
-        <script src="data/WatershedBoundaries_5.js"></script>
-        <script src="data/PrivateDrywells_6.js"></script>
-        <script src="data/PublicDrywells_7.js"></script>
+        <script src="data/Watershedboundary_5.js"></script>
+        <script src="data/PublicDrywells_6.js"></script>
+        <script src="data/PrivateDrywells_7.js"></script>
         <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString' || e.target.feature.geometry.type === 'MultiLineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+            highlightLayer.openPopup();
+        }
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[33.21633235700725,-120.2933544352267],[34.7099487648712,-116.10368578172795]]);
+        }).fitBounds([[33.48883158738341,-119.32314629355274],[34.62606065811521,-116.94354443155781]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -112,6 +130,7 @@
         var zoomControl = L.control.zoom({
             position: 'topleft'
         }).addTo(map);
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
         }
@@ -138,6 +157,23 @@
         bounds_group.addLayer(layer_LosAngelesGeology_1);
         map.addLayer(layer_LosAngelesGeology_1);
         function pop_CaltransRightofWay_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['gissrctype'] !== null ? autolinker.link(String(feature.properties['gissrctype']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -285,6 +321,23 @@
         bounds_group.addLayer(layer_CaltransRightofWay_2);
         map.addLayer(layer_CaltransRightofWay_2);
         function pop_GeohydrologicHydrologicWatershed_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(String(feature.properties['OBJECTID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -480,6 +533,23 @@
         bounds_group.addLayer(layer_GeohydrologicHydrologicWatershed_3);
         map.addLayer(layer_GeohydrologicHydrologicWatershed_3);
         function pop_GeohydrologicGroundBasin_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['Basin_Numb'] !== null ? autolinker.link(String(feature.properties['Basin_Numb']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -542,7 +612,24 @@
         });
         bounds_group.addLayer(layer_GeohydrologicGroundBasin_4);
         map.addLayer(layer_GeohydrologicGroundBasin_4);
-        function pop_WatershedBoundaries_5(feature, layer) {
+        function pop_Watershedboundary_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -579,11 +666,11 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_WatershedBoundaries_5_0(feature) {
+        function style_Watershedboundary_5_0(feature) {
             switch(String(feature.properties['Watershed_'])) {
                 case 'Central Santa Monica Bay':
                     return {
-                pane: 'pane_WatershedBoundaries_5',
+                pane: 'pane_Watershedboundary_5',
                 opacity: 1,
                 color: 'rgba(26,26,26,1.0)',
                 dashArray: '',
@@ -598,7 +685,7 @@
                     break;
                 case 'Lower Los Angeles River':
                     return {
-                pane: 'pane_WatershedBoundaries_5',
+                pane: 'pane_Watershedboundary_5',
                 opacity: 1,
                 color: 'rgba(26,26,26,1.0)',
                 dashArray: '',
@@ -613,7 +700,7 @@
                     break;
                 case 'Lower San Gabriel River':
                     return {
-                pane: 'pane_WatershedBoundaries_5',
+                pane: 'pane_Watershedboundary_5',
                 opacity: 1,
                 color: 'rgba(26,26,26,1.0)',
                 dashArray: '',
@@ -628,7 +715,7 @@
                     break;
                 case 'North Santa Monica Bay':
                     return {
-                pane: 'pane_WatershedBoundaries_5',
+                pane: 'pane_Watershedboundary_5',
                 opacity: 1,
                 color: 'rgba(26,26,26,1.0)',
                 dashArray: '',
@@ -643,7 +730,7 @@
                     break;
                 case 'Rio Hondo':
                     return {
-                pane: 'pane_WatershedBoundaries_5',
+                pane: 'pane_Watershedboundary_5',
                 opacity: 1,
                 color: 'rgba(26,26,26,1.0)',
                 dashArray: '',
@@ -658,7 +745,7 @@
                     break;
                 case 'Santa Clara River':
                     return {
-                pane: 'pane_WatershedBoundaries_5',
+                pane: 'pane_Watershedboundary_5',
                 opacity: 1,
                 color: 'rgba(26,26,26,1.0)',
                 dashArray: '',
@@ -673,7 +760,7 @@
                     break;
                 case 'South Santa Monica Bay':
                     return {
-                pane: 'pane_WatershedBoundaries_5',
+                pane: 'pane_Watershedboundary_5',
                 opacity: 1,
                 color: 'rgba(26,26,26,1.0)',
                 dashArray: '',
@@ -688,7 +775,7 @@
                     break;
                 case 'Upper Los Angeles River':
                     return {
-                pane: 'pane_WatershedBoundaries_5',
+                pane: 'pane_Watershedboundary_5',
                 opacity: 1,
                 color: 'rgba(26,26,26,1.0)',
                 dashArray: '',
@@ -703,7 +790,7 @@
                     break;
                 case 'Upper San Gabriel River':
                     return {
-                pane: 'pane_WatershedBoundaries_5',
+                pane: 'pane_Watershedboundary_5',
                 opacity: 1,
                 color: 'rgba(26,26,26,1.0)',
                 dashArray: '',
@@ -718,109 +805,42 @@
                     break;
             }
         }
-        map.createPane('pane_WatershedBoundaries_5');
-        map.getPane('pane_WatershedBoundaries_5').style.zIndex = 405;
-        map.getPane('pane_WatershedBoundaries_5').style['mix-blend-mode'] = 'normal';
-        var layer_WatershedBoundaries_5 = new L.geoJson(json_WatershedBoundaries_5, {
+        map.createPane('pane_Watershedboundary_5');
+        map.getPane('pane_Watershedboundary_5').style.zIndex = 405;
+        map.getPane('pane_Watershedboundary_5').style['mix-blend-mode'] = 'normal';
+        var layer_Watershedboundary_5 = new L.geoJson(json_Watershedboundary_5, {
             attribution: '',
             interactive: false,
-            dataVar: 'json_WatershedBoundaries_5',
-            layerName: 'layer_WatershedBoundaries_5',
-            pane: 'pane_WatershedBoundaries_5',
-            onEachFeature: pop_WatershedBoundaries_5,
-            style: style_WatershedBoundaries_5_0,
+            dataVar: 'json_Watershedboundary_5',
+            layerName: 'layer_Watershedboundary_5',
+            pane: 'pane_Watershedboundary_5',
+            onEachFeature: pop_Watershedboundary_5,
+            style: style_Watershedboundary_5_0,
         });
-        bounds_group.addLayer(layer_WatershedBoundaries_5);
-        map.addLayer(layer_WatershedBoundaries_5);
-        function pop_PrivateDrywells_6(feature, layer) {
+        bounds_group.addLayer(layer_Watershedboundary_5);
+        map.addLayer(layer_Watershedboundary_5);
+        function pop_PublicDrywells_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
             var popupContent = '<table>\
                     <tr>\
-                        <td class="visible-with-data" id="Site" colspan="2"><strong>Site</strong><br />' + (feature.properties['Site'] !== null ? autolinker.link(String(feature.properties['Site']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Dry Well Count</th>\
-                        <td class="visible-with-data" id="Dry Well Count">' + (feature.properties['Dry Well Count'] !== null ? autolinker.link(String(feature.properties['Dry Well Count']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Watershed</th>\
-                        <td class="visible-with-data" id="Watershed">' + (feature.properties['Watershed'] !== null ? autolinker.link(String(feature.properties['Watershed']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Municipality (City or County)</th>\
-                        <td class="visible-with-data" id="Municipality (City or County)">' + (feature.properties['Municipality (City or County)'] !== null ? autolinker.link(String(feature.properties['Municipality (City or County)']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Land Use</th>\
-                        <td class="visible-with-data" id="Land Use">' + (feature.properties['Land Use'] !== null ? autolinker.link(String(feature.properties['Land Use']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Owner</th>\
-                        <td class="visible-with-data" id="Owner">' + (feature.properties['Owner'] !== null ? autolinker.link(String(feature.properties['Owner']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Funding</th>\
-                        <td class="visible-with-data" id="Funding">' + (feature.properties['Funding'] !== null ? autolinker.link(String(feature.properties['Funding']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Map Source</th>\
-                        <td class="visible-with-data" id="Map Source">' + (feature.properties['Map Source'] !== null ? autolinker.link(String(feature.properties['Map Source']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Year of Installation</th>\
-                        <td class="visible-with-data" id="Year of Installation">' + (feature.properties['Year of Installation'] !== null ? autolinker.link(String(feature.properties['Year of Installation']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style_PrivateDrywells_6_0() {
-            return {
-                pane: 'pane_PrivateDrywells_6',
-                radius: 4.0,
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1,
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(255,58,91,1.0)',
-                interactive: true,
-            }
-        }
-        map.createPane('pane_PrivateDrywells_6');
-        map.getPane('pane_PrivateDrywells_6').style.zIndex = 406;
-        map.getPane('pane_PrivateDrywells_6').style['mix-blend-mode'] = 'normal';
-        var layer_PrivateDrywells_6 = new L.geoJson(json_PrivateDrywells_6, {
-            attribution: '',
-            interactive: true,
-            dataVar: 'json_PrivateDrywells_6',
-            layerName: 'layer_PrivateDrywells_6',
-            pane: 'pane_PrivateDrywells_6',
-            onEachFeature: pop_PrivateDrywells_6,
-            pointToLayer: function (feature, latlng) {
-                var context = {
-                    feature: feature,
-                    variables: {}
-                };
-                return L.circleMarker(latlng, style_PrivateDrywells_6_0(feature));
-            },
-        });
-        bounds_group.addLayer(layer_PrivateDrywells_6);
-        map.addLayer(layer_PrivateDrywells_6);
-        function pop_PublicDrywells_7(feature, layer) {
-            var popupContent = '<table>\
-                    <tr>\
-                        <td class="visible-with-data" id="Site" colspan="2"><strong>Site</strong><br />' + (feature.properties['Site'] !== null ? autolinker.link(String(feature.properties['Site']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Dry Well Count</th>\
-                        <td class="visible-with-data" id="Dry Well Count">' + (feature.properties['Dry Well Count'] !== null ? autolinker.link(String(feature.properties['Dry Well Count']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Site</th>\
+                        <td class="visible-with-data" id="Site">' + (feature.properties['Site'] !== null ? autolinker.link(String(feature.properties['Site']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">Watershed</th>\
@@ -847,8 +867,7 @@
                         <td class="visible-with-data" id="Year of Installation">' + (feature.properties['Year of Installation'] !== null ? autolinker.link(String(feature.properties['Year of Installation']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Funding</th>\
-                        <td class="visible-with-data" id="Funding">' + (feature.properties['Funding'] !== null ? autolinker.link(String(feature.properties['Funding']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td class="visible-with-data" id="Funding" colspan="2"><strong>Funding</strong><br />' + (feature.properties['Funding'] !== null ? autolinker.link(String(feature.properties['Funding']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">Map Source</th>\
@@ -862,9 +881,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_PublicDrywells_7_0() {
+        function style_PublicDrywells_6_0() {
             return {
-                pane: 'pane_PublicDrywells_7',
+                pane: 'pane_PublicDrywells_6',
                 radius: 4.0,
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
@@ -878,30 +897,182 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_PublicDrywells_7');
-        map.getPane('pane_PublicDrywells_7').style.zIndex = 407;
-        map.getPane('pane_PublicDrywells_7').style['mix-blend-mode'] = 'normal';
-        var layer_PublicDrywells_7 = new L.geoJson(json_PublicDrywells_7, {
+        map.createPane('pane_PublicDrywells_6');
+        map.getPane('pane_PublicDrywells_6').style.zIndex = 406;
+        map.getPane('pane_PublicDrywells_6').style['mix-blend-mode'] = 'normal';
+        var layer_PublicDrywells_6 = new L.geoJson(json_PublicDrywells_6, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_PublicDrywells_7',
-            layerName: 'layer_PublicDrywells_7',
-            pane: 'pane_PublicDrywells_7',
-            onEachFeature: pop_PublicDrywells_7,
+            dataVar: 'json_PublicDrywells_6',
+            layerName: 'layer_PublicDrywells_6',
+            pane: 'pane_PublicDrywells_6',
+            onEachFeature: pop_PublicDrywells_6,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.circleMarker(latlng, style_PublicDrywells_7_0(feature));
+                return L.circleMarker(latlng, style_PublicDrywells_6_0(feature));
             },
         });
-        bounds_group.addLayer(layer_PublicDrywells_7);
-        map.addLayer(layer_PublicDrywells_7);
+        bounds_group.addLayer(layer_PublicDrywells_6);
+        map.addLayer(layer_PublicDrywells_6);
+        function pop_PrivateDrywells_7(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Site</th>\
+                        <td class="visible-with-data" id="Site">' + (feature.properties['Site'] !== null ? autolinker.link(String(feature.properties['Site']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Land Use</th>\
+                        <td class="visible-with-data" id="Land Use">' + (feature.properties['Land Use'] !== null ? autolinker.link(String(feature.properties['Land Use']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Geology</th>\
+                        <td class="visible-with-data" id="Geology">' + (feature.properties['Geology'] !== null ? autolinker.link(String(feature.properties['Geology']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Owner</th>\
+                        <td class="visible-with-data" id="Owner">' + (feature.properties['Owner'] !== null ? autolinker.link(String(feature.properties['Owner']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Funding</th>\
+                        <td class="visible-with-data" id="Funding">' + (feature.properties['Funding'] !== null ? autolinker.link(String(feature.properties['Funding']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Map Source</th>\
+                        <td class="visible-with-data" id="Map Source">' + (feature.properties['Map Source'] !== null ? autolinker.link(String(feature.properties['Map Source']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Year of Installation</th>\
+                        <td class="visible-with-data" id="Year of Installation">' + (feature.properties['Year of Installation'] !== null ? autolinker.link(String(feature.properties['Year of Installation']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Watershed</th>\
+                        <td class="visible-with-data" id="Watershed">' + (feature.properties['Watershed'] !== null ? autolinker.link(String(feature.properties['Watershed']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Municipality (City or County)</th>\
+                        <td class="visible-with-data" id="Municipality (City or County)">' + (feature.properties['Municipality (City or County)'] !== null ? autolinker.link(String(feature.properties['Municipality (City or County)']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_PrivateDrywells_7_0() {
+            return {
+                pane: 'pane_PrivateDrywells_7',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,58,91,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_PrivateDrywells_7');
+        map.getPane('pane_PrivateDrywells_7').style.zIndex = 407;
+        map.getPane('pane_PrivateDrywells_7').style['mix-blend-mode'] = 'normal';
+        var layer_PrivateDrywells_7 = new L.geoJson(json_PrivateDrywells_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_PrivateDrywells_7',
+            layerName: 'layer_PrivateDrywells_7',
+            pane: 'pane_PrivateDrywells_7',
+            onEachFeature: pop_PrivateDrywells_7,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_PrivateDrywells_7_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_PrivateDrywells_7);
+        map.addLayer(layer_PrivateDrywells_7);
+        const url = {"Nominatim OSM": "https://nominatim.openstreetmap.org/search?format=geojson&addressdetails=1&",
+        "France BAN": "https://api-adresse.data.gouv.fr/search/?"}
+        var photonControl = L.control.photon({
+            url: url["Nominatim OSM"],
+            feedbackLabel: '',
+            position: 'topleft',
+            includePosition: true,
+            initial: true,
+            // resultsHandler: myHandler,
+        }).addTo(map);
+        photonControl._container.childNodes[0].style.borderRadius="10px"
+        // Create a variable to store the geoJSON data
+        var x = null;
+        // Create a variable to store the marker
+        var marker = null;
+        // Add an event listener to the Photon control to create a marker from the returned geoJSON data
+        var z = null;
+        photonControl.on('selected', function(e) {
+            console.log(photonControl.search.resultsContainer);
+            if (x != null) {
+                map.removeLayer(obj3.marker);
+                map.removeLayer(x);
+            }
+            obj2.gcd = e.choice;
+            x = L.geoJSON(obj2.gcd).addTo(map);
+            var label = typeof obj2.gcd.properties.label === 'undefined' ? obj2.gcd.properties.display_name : obj2.gcd.properties.label;
+            obj3.marker = L.marker(x.getLayers()[0].getLatLng()).bindPopup(label).addTo(map);
+            map.setView(x.getLayers()[0].getLatLng(), 17);
+            z = typeof e.choice.properties.label === 'undefined'? e.choice.properties.display_name : e.choice.properties.label;
+            console.log(e);
+            e.target.input.value = z;
+        });
+        var search = document.getElementsByClassName("leaflet-photon leaflet-control")[0];
+        search.classList.add("leaflet-control-search")
+        search.style.display = "flex";
+        search.style.backgroundColor="rgba(255,255,255,0.5)" 
+
+        // Create the new button element
+        var button = document.createElement("div");
+        button.id = "gcd-button-control";
+        button.className = "gcd-gl-btn fa fa-search search-button";
+
+        // Insert the button at the beginning of the search control
+        search.insertBefore(button, search.firstChild);
+        last = search.lastChild;
+        last.style.display = "none";
+        button.addEventListener("click", function (e) {
+            if (last.style.display === "none") {
+                last.style.display = "block";
+            } else {
+                last.style.display = "none";
+            }
+        });
         var overlaysTree = [
-            {label: '<img src="legend/PublicDrywells_7.png" /> Public Drywells', layer: layer_PublicDrywells_7},
-            {label: '<img src="legend/PrivateDrywells_6.png" /> Private Drywells', layer: layer_PrivateDrywells_6},
-            {label: 'Watershed Boundaries<br /><table><tr><td style="text-align: center;"><img src="legend/WatershedBoundaries_5_CentralSantaMonicaBay0.png" /></td><td>Central Santa Monica Bay</td></tr><tr><td style="text-align: center;"><img src="legend/WatershedBoundaries_5_LowerLosAngelesRiver1.png" /></td><td>Lower Los Angeles River</td></tr><tr><td style="text-align: center;"><img src="legend/WatershedBoundaries_5_LowerSanGabrielRiver2.png" /></td><td>Lower San Gabriel River</td></tr><tr><td style="text-align: center;"><img src="legend/WatershedBoundaries_5_NorthSantaMonicaBay3.png" /></td><td>North Santa Monica Bay</td></tr><tr><td style="text-align: center;"><img src="legend/WatershedBoundaries_5_RioHondo4.png" /></td><td>Rio Hondo</td></tr><tr><td style="text-align: center;"><img src="legend/WatershedBoundaries_5_SantaClaraRiver5.png" /></td><td>Santa Clara River</td></tr><tr><td style="text-align: center;"><img src="legend/WatershedBoundaries_5_SouthSantaMonicaBay6.png" /></td><td>South Santa Monica Bay</td></tr><tr><td style="text-align: center;"><img src="legend/WatershedBoundaries_5_UpperLosAngelesRiver7.png" /></td><td>Upper Los Angeles River</td></tr><tr><td style="text-align: center;"><img src="legend/WatershedBoundaries_5_UpperSanGabrielRiver8.png" /></td><td>Upper San Gabriel River</td></tr></table>', layer: layer_WatershedBoundaries_5},
+            {label: '<img src="legend/PrivateDrywells_7.png" /> Private Drywells', layer: layer_PrivateDrywells_7},
+            {label: '<img src="legend/PublicDrywells_6.png" /> Public Drywells', layer: layer_PublicDrywells_6},
+            {label: 'Watershed boundary<br /><table><tr><td style="text-align: center;"><img src="legend/Watershedboundary_5_CentralSantaMonicaBay0.png" /></td><td>Central Santa Monica Bay</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_5_LowerLosAngelesRiver1.png" /></td><td>Lower Los Angeles River</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_5_LowerSanGabrielRiver2.png" /></td><td>Lower San Gabriel River</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_5_NorthSantaMonicaBay3.png" /></td><td>North Santa Monica Bay</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_5_RioHondo4.png" /></td><td>Rio Hondo</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_5_SantaClaraRiver5.png" /></td><td>Santa Clara River</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_5_SouthSantaMonicaBay6.png" /></td><td>South Santa Monica Bay</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_5_UpperLosAngelesRiver7.png" /></td><td>Upper Los Angeles River</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_5_UpperSanGabrielRiver8.png" /></td><td>Upper San Gabriel River</td></tr></table>', layer: layer_Watershedboundary_5},
             {label: '<img src="legend/GeohydrologicGroundBasin_4.png" /> Geohydrologic Ground Basin', layer: layer_GeohydrologicGroundBasin_4},
             {label: '<img src="legend/GeohydrologicHydrologicWatershed_3.png" /> Geohydrologic Hydrologic Watershed', layer: layer_GeohydrologicHydrologicWatershed_3},
             {label: '<img src="legend/CaltransRightofWay_2.png" /> Caltrans Right of Way', layer: layer_CaltransRightofWay_2},
