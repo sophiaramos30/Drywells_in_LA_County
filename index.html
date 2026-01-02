@@ -62,7 +62,7 @@
         }
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[33.61900839366396,-119.22605646865941],[34.61506549629838,-117.11978724892951]]);
+        }).fitBounds([[33.971315287314624,-118.51819519208479],[34.07630096397111,-118.36272687721338]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -853,7 +853,8 @@
                         <td class="visible-with-data" id="X">' + (feature.properties['X'] !== null ? autolinker.link(String(feature.properties['X']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Drywell ID'] !== null ? autolinker.link(String(feature.properties['Drywell ID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Drywell ID</th>\
+                        <td class="visible-with-data" id="Drywell ID">' + (feature.properties['Drywell ID'] !== null ? autolinker.link(String(feature.properties['Drywell ID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -919,14 +920,8 @@
             });
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
                         <th scope="row">Site</th>\
                         <td class="visible-with-data" id="Site">' + (feature.properties['Site'] !== null ? autolinker.link(String(feature.properties['Site']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Dry Well Count'] !== null ? autolinker.link(String(feature.properties['Dry Well Count']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">Watershed</th>\
