@@ -42,7 +42,7 @@
         <script src="data/GeohydrologicGroundBasin_3.js"></script>
         <script src="data/Watershedboundary_4.js"></script>
         <script src="data/PrivateDrywells_5.js"></script>
-        <script src="data/PublicDrywells_6.js"></script>
+        <script src="data/PUBLICDRYWELLS_6.js"></script>
         <script>
         var highlightLayer;
         function highlightFeature(e) {
@@ -50,11 +50,11 @@
 
             if (e.target.feature.geometry.type === 'LineString' || e.target.feature.geometry.type === 'MultiLineString') {
               highlightLayer.setStyle({
-                color: '#ffff00',
+                color: 'rgba(255, 255, 0, 1.00)',
               });
             } else {
               highlightLayer.setStyle({
-                fillColor: '#ffff00',
+                fillColor: 'rgba(255, 255, 0, 1.00)',
                 fillOpacity: 1
               });
             }
@@ -62,7 +62,7 @@
         }
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[33.346438395359684,-119.65368531885949],[34.847600954079624,-116.48362391476931]]);
+        }).fitBounds([[33.61900839366396,-119.22605646865941],[34.61506549629838,-117.11978724892951]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -853,8 +853,7 @@
                         <td class="visible-with-data" id="X">' + (feature.properties['X'] !== null ? autolinker.link(String(feature.properties['X']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Drywell ID</th>\
-                        <td class="visible-with-data" id="Drywell ID">' + (feature.properties['Drywell ID'] !== null ? autolinker.link(String(feature.properties['Drywell ID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Drywell ID'] !== null ? autolinker.link(String(feature.properties['Drywell ID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -900,7 +899,7 @@
         });
         bounds_group.addLayer(layer_PrivateDrywells_5);
         map.addLayer(layer_PrivateDrywells_5);
-        function pop_PublicDrywells_6(feature, layer) {
+        function pop_PUBLICDRYWELLS_6(feature, layer) {
             layer.on({
                 mouseout: function(e) {
                     for (var i in e.target._eventParents) {
@@ -920,8 +919,14 @@
             });
             var popupContent = '<table>\
                     <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
                         <th scope="row">Site</th>\
                         <td class="visible-with-data" id="Site">' + (feature.properties['Site'] !== null ? autolinker.link(String(feature.properties['Site']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Dry Well Count'] !== null ? autolinker.link(String(feature.properties['Dry Well Count']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">Watershed</th>\
@@ -944,15 +949,12 @@
                         <td class="visible-with-data" id="Year of Installation">' + (feature.properties['Year of Installation'] !== null ? autolinker.link(String(feature.properties['Year of Installation']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td class="visible-with-data" id="Funding" colspan="2"><strong>Funding</strong><br />' + (feature.properties['Funding'] !== null ? autolinker.link(String(feature.properties['Funding']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Funding</th>\
+                        <td class="visible-with-data" id="Funding">' + (feature.properties['Funding'] !== null ? autolinker.link(String(feature.properties['Funding']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">Map Source</th>\
                         <td class="visible-with-data" id="Map Source">' + (feature.properties['Map Source'] !== null ? autolinker.link(String(feature.properties['Map Source']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Drywell Count</th>\
-                        <td class="visible-with-data" id="Drywell Count">' + (feature.properties['Drywell Count'] !== null ? autolinker.link(String(feature.properties['Drywell Count']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">Municipality (City or County)</th>\
@@ -978,9 +980,9 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_PublicDrywells_6_0() {
+        function style_PUBLICDRYWELLS_6_0() {
             return {
-                pane: 'pane_PublicDrywells_6',
+                pane: 'pane_PUBLICDRYWELLS_6',
                 radius: 4.0,
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
@@ -994,26 +996,26 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_PublicDrywells_6');
-        map.getPane('pane_PublicDrywells_6').style.zIndex = 406;
-        map.getPane('pane_PublicDrywells_6').style['mix-blend-mode'] = 'normal';
-        var layer_PublicDrywells_6 = new L.geoJson(json_PublicDrywells_6, {
+        map.createPane('pane_PUBLICDRYWELLS_6');
+        map.getPane('pane_PUBLICDRYWELLS_6').style.zIndex = 406;
+        map.getPane('pane_PUBLICDRYWELLS_6').style['mix-blend-mode'] = 'normal';
+        var layer_PUBLICDRYWELLS_6 = new L.geoJson(json_PUBLICDRYWELLS_6, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_PublicDrywells_6',
-            layerName: 'layer_PublicDrywells_6',
-            pane: 'pane_PublicDrywells_6',
-            onEachFeature: pop_PublicDrywells_6,
+            dataVar: 'json_PUBLICDRYWELLS_6',
+            layerName: 'layer_PUBLICDRYWELLS_6',
+            pane: 'pane_PUBLICDRYWELLS_6',
+            onEachFeature: pop_PUBLICDRYWELLS_6,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.circleMarker(latlng, style_PublicDrywells_6_0(feature));
+                return L.circleMarker(latlng, style_PUBLICDRYWELLS_6_0(feature));
             },
         });
-        bounds_group.addLayer(layer_PublicDrywells_6);
-        map.addLayer(layer_PublicDrywells_6);
+        bounds_group.addLayer(layer_PUBLICDRYWELLS_6);
+        map.addLayer(layer_PUBLICDRYWELLS_6);
         const url = {"Nominatim OSM": "https://nominatim.openstreetmap.org/search?format=geojson&addressdetails=1&",
         "France BAN": "https://api-adresse.data.gouv.fr/search/?"}
         var photonControl = L.control.photon({
@@ -1068,7 +1070,7 @@
             }
         });
         var overlaysTree = [
-            {label: '<img src="legend/PublicDrywells_6.png" /> Public Drywells', layer: layer_PublicDrywells_6},
+            {label: '<img src="legend/PUBLICDRYWELLS_6.png" /> PUBLIC DRYWELLS', layer: layer_PUBLICDRYWELLS_6},
             {label: '<img src="legend/PrivateDrywells_5.png" /> Private Drywells', layer: layer_PrivateDrywells_5},
             {label: 'Watershed boundary<br /><table><tr><td style="text-align: center;"><img src="legend/Watershedboundary_4_CentralSantaMonicaBay0.png" /></td><td>Central Santa Monica Bay</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_4_LowerLosAngelesRiver1.png" /></td><td>Lower Los Angeles River</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_4_LowerSanGabrielRiver2.png" /></td><td>Lower San Gabriel River</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_4_NorthSantaMonicaBay3.png" /></td><td>North Santa Monica Bay</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_4_RioHondo4.png" /></td><td>Rio Hondo</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_4_SantaClaraRiver5.png" /></td><td>Santa Clara River</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_4_SouthSantaMonicaBay6.png" /></td><td>South Santa Monica Bay</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_4_UpperLosAngelesRiver7.png" /></td><td>Upper Los Angeles River</td></tr><tr><td style="text-align: center;"><img src="legend/Watershedboundary_4_UpperSanGabrielRiver8.png" /></td><td>Upper San Gabriel River</td></tr></table>', layer: layer_Watershedboundary_4},
             {label: '<img src="legend/GeohydrologicGroundBasin_3.png" /> Geohydrologic Ground Basin', layer: layer_GeohydrologicGroundBasin_3},
